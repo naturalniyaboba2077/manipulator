@@ -1,5 +1,5 @@
 from PyQt5.QtCore import QTimer
-
+import os
 import ui
 from PyQt5.QtWidgets import QApplication, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget, QMainWindow
 
@@ -9,27 +9,20 @@ class Log():
         self.errors = []
 
 
-    def add_logs(self, logs):
-        self.logs.append(logs)
+    def add_logs(self, text):
+        self.logs.insert(0, text)
 
 
-    def add_errors(self, errors):
-        self.errors.append(errors)
-        self.logs.append(errors)
+    def add_errors(self, text):
+        self.errors.insert(0, text)
+        self.logs.insert(0, text)
 
     def get_logs(self):
-        logss = ""
-        for i in self.logs:
-            logss+= i
-            logss+= "\n"
-        return logss
+        return "\n".join(self.logs)
 
     def get_errors(self):
-        errorss = ""
-        for i in self.errors:
-            errorss+= i
-            errorss+= "\n"
-        return errorss
+        return "\n".join(self.errors)
+    
 
 class Ui_Main(QMainWindow, ui.Ui_MainWindow):
     def __init__(self):
@@ -51,24 +44,40 @@ class Ui_Main(QMainWindow, ui.Ui_MainWindow):
         self.horizontalSlider_5.valueChanged.connect(self.mot5)
         self.horizontalSlider_6.valueChanged.connect(self.mot6)
         self.pushButton.clicked.connect(self.pause)
+        self.logger=Log()
+        self.update_logs()
+        #self.pushButton_13.clicked.connect(self.save_logs_to_file)
+
+
+    def update_logs(self):
+        self.textBrowser.setText(self.logger.get_logs())
+
 
     def button_click(self):
         self.turnon=not self.turnon
         if self.turnon:
             self.pushButton_10.setText("Стоп")
             self.color=1
+            self.logger.add_logs("Робот запущен")
         else:
             self.pushButton_10.setText("Старт")
             self.color=0
+            self.logger.add_logs("Робот остановлен")
+        self.update_logs()
+        
 
     def pause(self):
         self.pause_mot = not self.pause_mot
         if self.pause_mot:
             self.pushButton.setText("пауза")
             self.color=2
+            self.logger.add_logs("Робот на паузе")
         else:
             self.pushButton.setText("возобновить")
             self.color=3
+            self.logger.add_logs("Робот возобновлен")
+        self.update_logs()
+
 
     def change_cords (self, s):
         if s == "по градусам":
@@ -78,6 +87,7 @@ class Ui_Main(QMainWindow, ui.Ui_MainWindow):
             self.label_4.setText("J4")
             self.label_5.setText("J5")
             self.label_6.setText("J6")
+            self.logger.add_logs("Режим управления изменён на градусы")
         elif s == "по координатам":
             self.label.setText("X")
             self.label_2.setText("Y")
@@ -85,6 +95,8 @@ class Ui_Main(QMainWindow, ui.Ui_MainWindow):
             self.label_4.setText("Rx")
             self.label_5.setText("Ry")
             self.label_6.setText("Rz")
+            self.logger.add_logs("Режим управления изменён на координаты")
+        self.update_logs()
 
 
 
