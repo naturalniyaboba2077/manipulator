@@ -31,6 +31,7 @@ class Ui_Main(QMainWindow, ui.Ui_MainWindow):
         self.pause_mot = True
         self.zahvattt = False
         self.konveyer = False
+        self.hand = False
         self.color = 0
         self.motors = [0, 0, 0, 0, 0, 0]
         self.setupUi(self)
@@ -50,6 +51,7 @@ class Ui_Main(QMainWindow, ui.Ui_MainWindow):
         self.pushButton_2.clicked.connect(self.extream_stop)
         self.pushButton_11.clicked.connect(self.zahvat)
         self.pushButton_12.clicked.connect(self.konv)
+        self.pushButton_4.clicked.connect(self.hand_going)
         self.logger=Log()
         self.update_logs()
 
@@ -98,24 +100,38 @@ class Ui_Main(QMainWindow, ui.Ui_MainWindow):
             self.logger.add_logs("Робот возобновлен")
         self.update_logs()
 
+    
+    def hand_going(self):
+        self.hand = not self.hand
+        if self.hand:
+            self.pushButton_4.setText("Остановить ручной решим управления")
+            self.logger.add_logs("переход в ручной режим управления")
+        else:
+            self.pushButton_4.setText("перейти в ручной режим управления")
+            self.logger.add_logs("переход в автоматический режим управления")
+        self.update_logs()
+    
+
 
     def change_cords (self, s):
-        if s == "по градусам":
-            self.label.setText("J1")
-            self.label_2.setText("J2")
-            self.label_3.setText("J3")
-            self.label_4.setText("J4")
-            self.label_5.setText("J5")
-            self.label_6.setText("J6")
-            self.logger.add_logs("Режим управления изменён на градусы")
-        elif s == "по координатам":
-            self.label.setText("X")
-            self.label_2.setText("Y")
-            self.label_3.setText("Z")
-            self.label_4.setText("Rx")
-            self.label_5.setText("Ry")
-            self.label_6.setText("Rz")
-            self.logger.add_logs("Режим управления изменён на координаты")
+        if self.hand == True:
+    
+            if s == "по градусам":
+                self.label.setText("J1")
+                self.label_2.setText("J2")
+                self.label_3.setText("J3")
+                self.label_4.setText("J4")
+                self.label_5.setText("J5")
+                self.label_6.setText("J6")
+                self.logger.add_logs("Режим управления изменён на градусы")
+            elif s == "по координатам":
+                self.label.setText("X")
+                self.label_2.setText("Y")
+                self.label_3.setText("Z")
+                self.label_4.setText("Rx")
+                self.label_5.setText("Ry")
+                self.label_6.setText("Rz")
+                self.logger.add_logs("Режим управления изменён на координаты")
         self.update_logs()
 
 
