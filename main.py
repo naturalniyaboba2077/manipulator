@@ -1,7 +1,7 @@
 from PyQt5.QtCore import QTimer
 import os
 import ui
-from PyQt5.QtWidgets import QApplication, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget, QMainWindow
+from PyQt5.QtWidgets import QApplication, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget, QMainWindow, QFileDialog
 
 class Log():
     def __init__(self):
@@ -29,6 +29,8 @@ class Ui_Main(QMainWindow, ui.Ui_MainWindow):
         super().__init__()
         self.turnon = False
         self.pause_mot = True
+        self.zahvattt = False
+        self.konveyer = False
         self.color = 0
         self.motors = [0, 0, 0, 0, 0, 0]
         self.setupUi(self)
@@ -44,10 +46,28 @@ class Ui_Main(QMainWindow, ui.Ui_MainWindow):
         self.horizontalSlider_5.valueChanged.connect(self.mot5)
         self.horizontalSlider_6.valueChanged.connect(self.mot6)
         self.pushButton.clicked.connect(self.pause)
+        self.pushButton_13.clicked.connect(self.save_logs_to_file)
+        self.pushButton_2.clicked.connect(self.extream_stop)
+        self.pushButton_11.clicked.connect(self.zahvat)
+        self.pushButton_12.clicked.connect(self.konv)
         self.logger=Log()
         self.update_logs()
-        #self.pushButton_13.clicked.connect(self.save_logs_to_file)
 
+
+    def save_logs_to_file(self):
+        path = self.lesavepath.text().strip()
+        if not path:
+            self.logger.add_logs("Ошибка сохранения")
+            self.update_logs()
+            return
+        
+        try:
+            open(path, 'w', encoding='utf-8').write(self.logger.get_logs())
+            self.logger.add_logs("Сохранено")
+        except:
+            self.logger.add_logs("Ошибка сохранения")
+            
+        self.update_logs()
 
     def update_logs(self):
         self.textBrowser.setText(self.logger.get_logs())
@@ -98,6 +118,33 @@ class Ui_Main(QMainWindow, ui.Ui_MainWindow):
             self.logger.add_logs("Режим управления изменён на координаты")
         self.update_logs()
 
+
+    def extream_stop (self):
+        if 0 == 0:
+            self.color = 4
+            self.logger.add_logs("Экстренная остановка")
+        self.update_logs()
+
+    def zahvat (self):
+        self.zahvattt = not self.zahvattt
+        if self.zahvattt:
+            self.pushButton_11.setText("отпустить")
+            self.logger.add_logs("захват включен")
+        else:
+            self.pushButton_11.setText("захватить")
+            self.logger.add_logs("захват выключен")
+        self.update_logs()
+
+    
+    def konv (self):
+        self.konveyer = not self.konveyer
+        if self.konveyer:
+            self.pushButton_12.setText("выключить конвейер")
+            self.logger.add_logs("конвейер включен")
+        else:
+            self.pushButton_12.setText("включить конвейер")
+            self.logger.add_logs("конвейер выключен")
+        self.update_logs()
 
 
     def updates(self):
