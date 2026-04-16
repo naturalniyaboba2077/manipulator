@@ -1,0 +1,17 @@
+Metadata-Version: 2.1
+Name: motion-core-API
+Version: 0.1.2
+Summary: Библиотека для управления оборудованием компании Applied Robotics
+Home-page: UNKNOWN
+Author: Mikhail Filchenkov
+Author-email: m.filchenkov@gmail.com
+License: MIT
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Classifier: License :: OSI Approved :: MIT License
+Requires-Python: >=3.10
+License-File: LICENSE
+
+UNKNOWN
+

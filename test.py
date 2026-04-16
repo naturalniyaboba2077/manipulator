@@ -7,7 +7,7 @@ class Log():
         self.errors = []
 
 
-    def add_logs(self, logs):
+    def add_logs(self, logs): 
         self.logs.append(logs)
 
 
